@@ -118,25 +118,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/check',
-    component: Layout,
-    meta: { title: '审核管理', icon: 'tab' },
-    children: [
-      {
-        path: 'waiter',
-        component: () => import('@/pages/check/WaiterCheck'),
-        name: 'waiter',
-        meta: { title: '员工审核', icon: 'tab' }
-      },
-      {
-        path: 'withdraw',
-        component: () => import('@/pages/check/WithdrawCheck'),
-        name: 'withdraw',
-        meta: { title: '提现审核', icon: 'tab' }
-      }
-    ]
-  },
-  {
     path: '/product',
     component: Layout,
     children: [
@@ -170,7 +151,33 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/pages/waiter/Details'),
         name: 'details',
-        meta: { title: '产品详情', icon: 'tab' }
+        meta: { title: '员工详情', icon: 'tab' }
+      },
+      {
+        path: 'Check',
+        hidden: true,
+        component: () => import('@/pages/waiter/Check'),
+        name: 'Check',
+        meta: { title: '员工审核', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/category',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/pages/category/List'),
+        name: 'category',
+        meta: { title: '栏目管理', icon: 'tab' }
+      },
+      {
+        path: 'details',
+        hidden: true,
+        component: () => import('@/pages/category/Details'),
+        name: 'details',
+        meta: { title: '栏目详情', icon: 'tab' }
       }
     ]
   },
@@ -190,6 +197,25 @@ export const asyncRoutes = [
         component: () => import('@/pages/order/Details'),
         name: 'details',
         meta: { title: '产品详情', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/check',
+    component: Layout,
+    meta: { title: '审核管理', icon: 'tab' },
+    children: [
+      {
+        path: 'waiter',
+        component: () => import('@/pages/check/WaiterCheck'),
+        name: 'waiter',
+        meta: { title: '员工审核', icon: 'tab' }
+      },
+      {
+        path: 'withdraw',
+        component: () => import('@/pages/check/WithdrawCheck'),
+        name: 'withdraw',
+        meta: { title: '提现审核', icon: 'tab' }
       }
     ]
   },

@@ -13,13 +13,17 @@
       </div></el-form-item>
     </el-form>
 
-    <el-table :data="products.list" style="width: 100%" size="mini">
+    <el-table :data="categories.list" style="width: 100%" size="mini">
+      <el-table-column type="selection" />
       <el-table-column prop="id" label="编号" />
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="description" label="描述" />
-      <el-table-column prop="price" label="价格" />
-      <el-table-column prop="status" label="货存" />
-      <el-table-column prop="categoryId" label="具体事务id" />
+      <el-table-column prop="name" label="name" />
+      <el-table-column prop="num" label="num" />
+      <el-table-column label="icon">
+        <template #default="record">
+          <img :src="record.row.icon" alt="">
+        </template>
+      </el-table-column>
+      <el-table-column prop="parentId" label="parentId" />
       <el-table-column label="操作" align="center">
         <template v-slot:default="scope">
           <!-- 如何传递参数给点击函数 -->
@@ -32,7 +36,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="products.total"
+        :total="categories.total"
         :page-size="param.pageSize"
         :current-page="param.page+1"
         @current-change="changepage"
@@ -50,12 +54,12 @@ export default {
     return {
       param: {
         page: 0,
-        pageSize: 8
+        pageSize: 5
       }
     }
   },
   computed: {
-    ...mapState('product', ['products'])
+    ...mapState('category', ['categories'])
     // ...mapGetters('waiter',['']),
   },
   created() {
@@ -63,14 +67,14 @@ export default {
   },
   methods: {
     // ...mapMutations('waiter',['']),
-    ...mapActions('product', ['reloadDatequery']),
+    ...mapActions('category', ['reloadDatequery']),
     onSubmit() {
       console.log('查询')
     },
     detailshandler(param) {
       console.log(param)
       this.$router.push({
-        path: '/product/Details',
+        path: '/category/Details',
         query: { id: param }
       })
     },
