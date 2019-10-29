@@ -1,6 +1,6 @@
 <template>
   <div>
-    顾客
+    产品
   </div>
 </template>
 

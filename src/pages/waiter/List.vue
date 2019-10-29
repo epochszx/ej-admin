@@ -1,6 +1,6 @@
 <template>
   <div>
-    顾客
+    员工
   </div>
 </template>
 
