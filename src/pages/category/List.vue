@@ -1,11 +1,11 @@
 <template>
-  <div class="customer">
+  <div class="category">
     <!-- 按钮 -->
     <el-row>
       <el-col :span="20">
         <el-form :inline="true">
-          <el-form-item label="姓名">
-            <el-input v-model="customers.realname" clearable />
+          <el-form-item label="栏目名称">
+            <el-input v-model="params.name" clearable />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchHandle">查询</el-button>
@@ -13,20 +13,24 @@
         </el-form>
       </el-col>
       <el-col :span="4">
-        <!-- <el-button type="primary" @click="toAddHandler">添加</el-button>
-        <el-button type="danger" @click="batchDeleteHandler">批量删除</el-button> -->
+        <el-button type="primary" @click="toAddHandler">添加</el-button>
+        <el-button type="danger" @click="batchDeleteHandler">批量删除</el-button>
       </el-col>
     </el-row>
     <!-- 表格 -->
     <div>
-      <el-table ref="multipleTable" v-loading="loading" size="small" :data="customers" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" v-loading="loading" size="small" :data="categories.list" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
         <el-table-column type="selection" />
         <el-table-column prop="id" label="编号" />
-        <el-table-column prop="realname" label="姓名" />
-        <el-table-column prop="username" label="用户名" />
-        <el-table-column prop="telephone" label="电话" />
-        <el-table-column prop="type" label="类型" />
-        <el-table-column align="center" label="操作">
+        <el-table-column prop="name" label="服务名称" />
+        <el-table-column prop="num" label="服务编号" />
+        <el-table-column prop="icon" label="服务图标">
+          <template #default="record">
+            <img :src="record.row.icon" alt="无图片">
+          </template>
+        </el-table-column>
+        <el-table-column prop="parentId" label="父栏目" />
+        <el-table-column label="操作">
           <template #default="record">
             <!-- 修改按钮 -->
             <a href="" style="margin-right:10px;color:#409eff" @click.prevent="updateHandler(record.row)">
@@ -36,31 +40,34 @@
             <a href="" style="margin-right:10px;color:#F56C6C" @click.prevent="deleteHandler(record.row.id)">
               <i class="el-icon-delete" />
             </a>
-            <!-- 详情 -->
-            <el-button size="small" type="text" @click="detailsHandler(record.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->
-    <!-- <el-pagination
+    <el-pagination
       layout="prev, pager, next"
       :page-size="params.pageSize"
       :current-page="params.page+1"
-      :total="customers.total"
+      :total="categories.total"
       @current-change="pageChangeHandle"
-    /> -->
+    />
     <!-- 模态框 -->
-    <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal" @close="dialogCloseHandler">
+    <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal">
       <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="姓名" prop="realname">
-          <el-input v-model="ruleForm.realname" minlength="2" maxlength="8" show-word-limit />
+        <el-form-item label="栏目名称" prop="name">
+          <el-input v-model="ruleForm.name" minlength="2" maxlength="8" show-word-limit />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="ruleForm.password" type="password" autocomplete="off" />
+        <el-form-item label="栏目编号" prop="num">
+          <el-input v-model.number="ruleForm.num" />
         </el-form-item>
-        <el-form-item label="手机号" prop="telephone">
-          <el-input v-model.number="ruleForm.telephone" />
+        <el-form-item label="栏目图标" prop="icon">
+          <el-input v-model="ruleForm.icon" show-word-limit />
+        </el-form-item>
+        <el-form-item label="父栏目" prop="parentId">
+          <el-select v-model="ruleForm.parentId" placeholder="请选择">
+            <el-option v-for="parentId in allCategories" :key="parentId.id" :label="parentId.realname" :value="parentId.id" />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -74,83 +81,43 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass')
-        }
-        callback()
-      }
-    }
-    var checkTelephone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('手机号不能为空'))
-      }
-      setTimeout(() => {
-        // if (!Number.isInteger(value)) {
-        //     callback(new Error('请输入数字值'));
-        // } else {
-        // 正则表达式验证手机号
-        var myreg = /^[1][3,4,5,7,8][0-9]{9}$/
-        if (!myreg.test(value)) {
-          callback(new Error('请输入正确的手机号'))
-        } else {
-          callback()
-        }
-        // }
-      }, 200)
-    }
     return {
       ids: [],
-      // params: {
-      //   page: 0,
-      //   pageSize: 5
-      // },
+      params: {
+        page: 0,
+        pageSize: 5
+      },
       ruleForm: {
-        realname: '',
-        password: '',
-        telephone: ''
       },
       rules: {
-        realname: [
+        name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
-        ],
-        password: [
-          { validator: validatePass, required: true, trigger: 'blur' }
-        ],
-        telephone: [
-          { validator: checkTelephone, required: true, trigger: 'blur' }
         ]
       }
 
     }
   },
   computed: {
-    ...mapState('customer', ['customers', 'visible', 'title', 'loading'])
+    ...mapState('category', ['categories', 'visible', 'title', 'loading', 'allCategories'])
   },
   created() {
-    // this.queryFindCustomers(this.params)
-    this.findAllCustomers()
+    this.queryFindCategories(this.params)
+    // this.findAllCategories();
+    this.selectParentId()
   },
   methods: {
-    // 分发动作,提交突变
-    // showModal(){
-    //    return this.$store.commit("showmodal");
-    // }
     // 打开关闭模态框
-    ...mapMutations('customer', ['showModal', 'closeModal', 'setTitle']),
+    ...mapMutations('category', ['showModal', 'closeModal', 'setTitle']),
     // 重载数据
-    ...mapActions('customer', ['findAllCustomers', 'saveOrUpdateCustomer', 'deleteCustomerById', 'batchDeleteCustomers']),
+    ...mapActions('category', ['queryFindCategories', 'saveOrUpdateCategory', 'deleteCategoryById', 'batchDeleteCategories', 'selectParentId']),
 
     // 普通方法
     // 分页按钮
-    // pageChangeHandle(page) {
-    //   this.params.page = page - 1
-    //   this.queryFindCustomers(this.params)
-    // },
+    pageChangeHandle(page) {
+      this.params.page = page - 1
+      this.queryFindCategories(this.params)
+    },
 
     // 添加按钮打开模态框
     toAddHandler() {
@@ -164,7 +131,7 @@ export default {
     submitHandle() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          const promise = this.saveOrUpdateCustomer(this.ruleForm)
+          const promise = this.saveOrUpdateCategory(this.ruleForm)
           promise.then(() => {
             this.$message({
               type: 'success',
@@ -178,9 +145,9 @@ export default {
       })
     },
     // 修改
-    updateHandler(customer) {
-      this.ruleForm = customer
-      this.setTitle('修改顾客信息')
+    updateHandler(category) {
+      this.ruleForm = category
+      this.setTitle('修改栏目信息')
       this.showModal()
     },
     // 删除
@@ -190,7 +157,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.deleteCustomerById(id)
+        this.deleteCategoryById(id)
           .then(() => {
             this.$message({
               type: 'success',
@@ -216,7 +183,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.batchDeleteCustomers(this.ids)
+        this.batchDeleteCategories(this.ids)
           .then(() => {
             this.$message({
               type: 'success',
@@ -240,16 +207,16 @@ export default {
       this.ids = val.map(item => item.id)
     },
     // 详情页面
-    detailsHandler(customer) {
-      // this.$router.push('/customerDetails')
+    detailsHandler(category) {
+      // this.$router.push('/categoryDetails')
       this.$router.push({
-        path: '/customer/details',
-        query: { id: customer.id }
+        path: '/category/details',
+        query: { id: category.id }
       })
     },
     // 查询按钮
     searchHandle() {
-      this.findAllCustomers()
+      this.queryFindCategories(this.params)
     }
 
   }

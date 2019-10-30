@@ -193,6 +193,18 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/category',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/pages/category/List'),
+        name: 'category',
+        meta: { title: '栏目管理', icon: 'tab' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
