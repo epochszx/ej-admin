@@ -106,7 +106,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/pages/customer/List'),
         name: 'customer',
-        meta: { title: '顾客管理', icon: 'tab' }
+        meta: { title: '顾客管理', icon: 'user' }
       },
       {
         path: 'details',

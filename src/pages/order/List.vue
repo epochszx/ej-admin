@@ -7,8 +7,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="orders" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -42,8 +47,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_unpay" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -63,8 +73,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_unsend" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -103,8 +118,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_unReceive" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -124,8 +144,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_unService" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -145,8 +170,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_unConfirm" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -167,8 +197,13 @@
           <div>
             <el-table ref="multipleTable" v-loading="loading" size="small" :data="order_finish" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
-              <el-table-column prop="id" label="编号" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column prop="id" label="编号" width="100" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
@@ -228,6 +263,22 @@ export default {
     // 重载数据
     ...mapActions('order', ['findAllOrders', 'unSendOrders', 'unPayOrders', 'unReceiveOrders', 'unServiceOrders', 'unConfirmOrders', 'finishOrders', 'saveOrUpdateOrder', 'selectWaiter', 'sendOrdersHandler', 'receiveOrderHandler', 'finishOrderHandler',, 'confirmOrderHandler', 'rejectOrderHandler']),
     // 普通方法
+    // 日期时间方法
+    dateParse(dataString) {
+      if (dataString) {
+        const date = new Date(dataString)
+        const Y = date.getFullYear() + '-'
+        const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+        const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+        const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+        const s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+        return Y + M + D + h + m + s
+      } else {
+        return ''
+      }
+    },
+    // 重置模态框
     dialogCloseHandler() {
       this.$refs.ruleForm.resetFields()
     },
