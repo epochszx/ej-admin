@@ -3,24 +3,26 @@
     <h2>产品详情</h2>
     <el-button size="small" type="primary" @click="backHandler">返回</el-button>
     <el-tabs v-model="activeName">
+      <!-- {{product}} -->
       <el-tab-pane label="基本信息" name="product" size="mini">
-        <el-table :data="product">
-          <el-table-column prop="id" label="编号" />
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="description" label="描述" />
-          <el-table-column prop="price" label="价格" />
-          <el-table-column prop="status" label="状态" />
-          <el-table-column prop="categoryId" label="类型id" />
-          <el-table-column prop="category.id" label="类型id" />
-          <el-table-column prop="category.name" label="类型名称" />
-          <el-table-column prop="category.num" label="类型数量" />
-          <el-table-column prop="category.icon" label="类型图标">
-            <template #default="record">
-              <img :src="record.row.category.icon" alt="">
-            </template>
-          </el-table-column>
-          <el-table-column prop="category.parentId" label="类型的父级id" />
-        </el-table>
+        <el-row :gutter="20">
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>产品编号：</strong>{{ product.id }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>产品名称：</strong>{{ product.name }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>产品价格：</strong>{{ product.price }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>产品状态：</strong>{{ product.status }}</p></div></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>产品描述：</strong>{{ product.description }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>所属类型名称：</strong>{{ product.category.name }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>所属类型id：</strong>{{ product.categoryId }}</p></div></el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"><p><strong>所属类型数量：</strong>{{ product.category.num }}</p></div></el-col>
+        </el-row>
+        <el-row>
+          <el-col><strong>所属类型图标：</strong></el-col>
+          <el-col><img :src="product.category.icon" alt=""></el-col>
+          <el-col><strong>产品图片：</strong></el-col>
+          <el-col><img :src="product.photo" alt=""></el-col>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -52,5 +54,29 @@ export default {
 }
 </script>
 <style scoped>
-
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-col {
+    border-radius: 4px;
+    text-align: center;
+    line-height: 3em;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
 </style>
