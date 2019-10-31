@@ -20,7 +20,15 @@
       </el-col>
     </el-row>
 
-    <el-table :data="waiters" style="width: 100%" size="mini" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="waiters"
+      style="width: 100%"
+      size="mini"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" />
       <el-table-column prop="id" label="编号" />
       <el-table-column prop="realname" label="姓名" />
@@ -52,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('waiter', ['waiters'])
+    ...mapState('waiter', ['waiters', 'loading'])
     // ...mapGetters('waiter',['']),
   },
   created() {

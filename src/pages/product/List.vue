@@ -19,7 +19,17 @@
         <el-button type="danger" @click="deletemoreHandler">批量删除</el-button>
       </el-col>
     </el-row>
-    <el-table :data="products.list" style="width: 100%" size="mini">
+    {{ ids }}
+    <el-table
+      v-loading="loading"
+      :data="products.list"
+      style="width: 100%"
+      size="mini"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" />
       <el-table-column prop="id" label="编号" />
       <el-table-column prop="name" label="名称" />
       <el-table-column prop="description" label="描述" />
@@ -29,15 +39,14 @@
         <template v-slot:default="scope">
           <!-- 如何传递参数给点击函数 -->
           <el-button size="mini" type="text" circle @click="detailsHandler(scope.row.id)">详情</el-button>
-          <el-button size="mini" type="text" circle @click="updataHandler(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" circle @click="deleteHandler(scope.row.id)">删除</el-button>
+          <el-button size="mini" type="text" circle @click="updataHandler(scope.row)"><i class="el-icon-edit" /></el-button>
+          <el-button size="mini" type="text" circle style="color:#F56C6C" @click="deleteHandler(scope.row.id)"><i class="el-icon-delete" /></el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <div style="margin-top:10px;margin-bottom:10px;">
       <el-pagination
-        background
         layout="prev, pager, next"
         :total="products.total"
         :page-size="param.pageSize"
@@ -47,7 +56,7 @@
     </div>
 
     <!-- model -->
-    <el-dialog title="产品详细信息" :visible.sync="dialogFormVisible" :before-close="hidemodel" @close="closeHandler">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :before-close="hidemodel" @close="closeHandler">
       {{ product }}
       <el-form ref="productsref" :model="product" :rules="rules">
         <el-form-item label="产品名称" prop="name" :label-width="formLabelWidth">
@@ -56,7 +65,7 @@
         <el-form-item label="产品价钱" prop="price" :label-width="formLabelWidth">
           <el-input v-model="product.price" />
         </el-form-item>
-        <el-form-item label="产品描述" :label-width="formLabelWidth">
+        <el-form-item label="产品描述" :label-width="formLabelWidth" maxlength="30">
           <el-input v-model="product.description" type="textarea" :rows="2" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="产品id" prop="categoryId" :label-width="formLabelWidth">
@@ -113,11 +122,12 @@ export default {
           { required: true, message: '选择产品id', trigger: 'blur' }
         ]
       },
-      fileList: []
+      fileList: [],
+      ids: []
     }
   },
   computed: {
-    ...mapState('product', ['dialogFormVisible', 'products']),
+    ...mapState('product', ['dialogFormVisible', 'products', 'title', 'loading']),
     ...mapState('category', ['allCategories'])
     // ...mapGetters('waiter',['']),
   },
@@ -127,12 +137,12 @@ export default {
     this.selectParentId()
   },
   methods: {
-    ...mapMutations('product', ['hidemodel', 'showmodel']),
-    ...mapActions('product', ['reloadDatequery', 'saveOrUpdateproduct', 'deleteupload', 'deleteById']),
+    ...mapMutations('product', ['hidemodel', 'showmodel', 'changetitle']),
+    ...mapActions('product', ['reloadDatequery', 'saveOrUpdateproduct', 'deleteupload', 'deleteById', 'deletemore']),
     ...mapActions('category', ['selectParentId']),
     // 跳转详情页面
     detailsHandler(param) {
-      console.log(param)
+      // console.log(param)
       this.$router.push({
         path: '/product/Details',
         query: { id: param }
@@ -150,6 +160,7 @@ export default {
     },
     // 添加
     addHandler() {
+      this.changetitle('添加产品信息')
       this.product = {}
       this.showmodel()
     },
@@ -179,6 +190,7 @@ export default {
     },
     // 修改函数
     updataHandler(product) {
+      this.changetitle('修改产品信息')
       this.product = product
       // 更改上传的文件
       // console.log(product.photo)
@@ -202,22 +214,69 @@ export default {
       }
     },
     // 删除上传文件的函数
-    deleteuploadHandker(file) {
-      console.log(file.uid)
+    deleteuploadHandker(file, fileList) {
+      console.log(file)
+      console.log(fileList)
       this.deleteupload(file.uid).then(() => {
         console.log(response)
       })
     },
     // 批量删除信息
-    deletemoerHandler() {
-
-    },
-    deleteHandler(id) {
-      this.deleteById(id).then((response) => {
-        // 数据刷新
-        this.inquireHandler()
-        this.$message({ message: response.statusText, type: 'success' })
+    deletemoreHandler() {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deletemore(this.ids)
+          .then(() => {
+            this.inquireHandler()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
+    },
+    // 根据id删除产品信息
+    deleteHandler(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteById(id)
+          .then(() => {
+            this.inquireHandler()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'error',
+              message: '删除失败!'
+            })
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    handleSelectionChange(val) {
+      this.ids = val.map(item => item.id)
     }
   }
 }

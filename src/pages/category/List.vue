@@ -55,6 +55,8 @@
     <!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal">
       <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+        {{ ruleForm }}
+
         <el-form-item label="栏目名称" prop="name">
           <el-input v-model="ruleForm.name" minlength="2" maxlength="8" show-word-limit />
         </el-form-item>
@@ -62,7 +64,18 @@
           <el-input v-model.number="ruleForm.num" />
         </el-form-item>
         <el-form-item label="栏目图标" prop="icon">
-          <el-input v-model="ruleForm.icon" show-word-limit />
+          <el-upload
+            class="upload-demo"
+            action="http://134.175.154.93:6677/file/upload"
+            :on-success="uploadsuccessHandler"
+            :before-remove="deleteuploadHandker"
+            :file-list="fileList"
+            :limit="1"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="父栏目" prop="parentId">
           <el-select v-model="ruleForm.parentId" placeholder="请选择">
@@ -94,7 +107,8 @@ export default {
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      fileList: []
 
     }
   },
@@ -148,6 +162,11 @@ export default {
     updateHandler(category) {
       this.ruleForm = category
       this.setTitle('修改栏目信息')
+      if (category.icon != null) {
+        this.fileList.push({ name: '当前图片', url: 'category.icon' })
+      } else {
+        this.fileList.push({ name: '没有图片', url: '' })
+      }
       this.showModal()
     },
     // 删除
@@ -217,8 +236,23 @@ export default {
     // 查询按钮
     searchHandle() {
       this.queryFindCategories(this.params)
-    }
-
+    },
+    // 上传函数
+    uploadsuccessHandler(response) {
+      console.log(response)
+      if (response.status === 200) {
+        const id = response.data.id
+        const icon = 'http://134.175.154.93:8888/group1/' + id
+        // 手动绑定图标
+        this.ruleForm.icon = icon
+        // 将数据和表单上的{{}}实现数据同时改变；
+        this.ruleForm = Object.assign({}, this.ruleForm)
+      } else {
+        this.$message.error('文件上传失败')
+      }
+    },
+    // 删除上传文件
+    deleteuploadHandker() {}
   }
 }
 </script>
