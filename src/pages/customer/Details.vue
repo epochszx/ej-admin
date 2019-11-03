@@ -73,7 +73,12 @@
               <el-table-column prop="customer.realname" label="顾客姓名" />
               <el-table-column prop="waiter.realname" label="员工姓名" />
               <el-table-column prop="address.address" label="地址" />
-              <el-table-column prop="orderTime" label="订单时间" />
+              <el-table-column label="订单时间" width="300" align="center">
+                <template #default="record">
+                  <i class="el-icon-time" />
+                  <span>{{ dateParse(record.row.orderTime) }}</span>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
         </el-tab-pane>
@@ -133,6 +138,21 @@ export default {
     ...mapActions('address', ['findByCustomerId', 'saveOrUpdateAddress', 'customerSelect', 'deleteAddressById']),
     ...mapActions('orderCustomer', ['orderFindByCustomerId']),
     // 普通方法
+    // 日期时间方法
+    dateParse(dataString) {
+      if (dataString) {
+        const date = new Date(dataString)
+        const Y = date.getFullYear() + '-'
+        const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+        const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+        const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+        const s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+        return Y + M + D + h + m + s
+      } else {
+        return ''
+      }
+    },
     // 返回
     backHandler() {
       // this.$router.push("/customer")

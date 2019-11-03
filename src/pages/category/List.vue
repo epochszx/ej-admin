@@ -55,8 +55,6 @@
     <!-- 模态框 -->
     <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal">
       <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        {{ ruleForm }}
-
         <el-form-item label="栏目名称" prop="name">
           <el-input v-model="ruleForm.name" minlength="2" maxlength="8" show-word-limit />
         </el-form-item>

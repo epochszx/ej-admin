@@ -5,7 +5,7 @@
         <el-tab-pane label="所有订单" name="first">
           <!-- 表格 -->
           <div>
-            <el-table ref="multipleTable" v-loading="loading" size="small" :data="orders" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
+            <el-table ref="multipleTable" v-loading="loading" size="small" :data="orderlist" tooltip-effect="dark" style="width: 100%" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" @selection-change="handleSelectionChange">
               <el-table-column type="selection" />
               <el-table-column prop="id" label="编号" width="100" />
               <el-table-column label="订单时间" width="300" align="center">
@@ -17,29 +17,15 @@
               <el-table-column prop="total" label="订单量" />
               <el-table-column prop="status" label="状态" />
               <el-table-column prop="customerId" label="customerId" />
-              <el-table-column prop="waiterId" label="waiterId" />
-              <el-table-column prop="addressId" label="addressId" />
+              <!-- <el-table-column prop="waiterId" label="waiterId" />
+              <el-table-column prop="addressId" label="addressId" /> -->
               <el-table-column label="操作">
                 <template #default="record">
                   <!-- 详情 -->
-                  <el-button size="small" type="text" @click="detailsHandler(record.row)">详情</el-button>
+                  <el-button size="small" type="text" @click="detailsHandler(record.row.id)">详情</el-button>
                 </template>
               </el-table-column>
             </el-table>
-          </div>
-          <!-- 模态框 -->
-          <div>
-            <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal" @close="dialogCloseHandler">
-              <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="姓名" prop="realname">
-                  <el-input v-model="ruleForm.realname" minlength="2" maxlength="8" show-word-limit />
-                </el-form-item>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="closeModal">取 消</el-button>
-                <el-button type="primary" @click="submitHandle">确 定</el-button>
-              </div>
-            </el-dialog>
           </div>
         </el-tab-pane>
         <el-tab-pane label="待支付" name="second">
@@ -95,7 +81,7 @@
           </div>
           <!-- 模态框 -->
           <div>
-            <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal" @close="dialogCloseHandler">
+            <el-dialog :title="title" :visible.sync="visible" width="50%" :before-close="closeModal">
               <el-form ref="ruleForm" :model="sendOrder" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="订单编号" prop="orderId">
                   <el-input v-model="sendOrder.id" show-word-limit />
@@ -159,7 +145,7 @@
               <el-table-column label="操作">
                 <template #default="record">
                   <!-- 详情 -->
-                  <el-button size="small" type="text" @click="finishHandler(record.row.id)">完成订单</el-button>
+                  <el-button size="small" type="text" @click="finishHandler(record.row.id)">完成服务</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -233,16 +219,12 @@ export default {
         waiterId: ''
       },
       rules: {
-        realname: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
-        ]
       }
 
     }
   },
   computed: {
-    ...mapState('order', ['orders', 'order_unsend', 'order_unpay', 'order_unReceive', 'order_unService', 'order_unConfirm', 'order_finish', 'visible', 'title', 'loading', 'waiters'])
+    ...mapState('order', ['orderlist', 'order_unsend', 'order_unpay', 'order_unReceive', 'order_unService', 'order_unConfirm', 'order_finish', 'visible', 'title', 'loading', 'waiters'])
   },
   created() {
     this.findAllOrders()
@@ -254,10 +236,6 @@ export default {
     this.selectWaiter()
   },
   methods: {
-    // 分发动作,提交突变
-    // showModal(){
-    //    return this.$store.commit("showmodal");
-    // }
     // 打开关闭模态框
     ...mapMutations('order', ['showModal', 'closeModal', 'setTitle']),
     // 重载数据
@@ -278,10 +256,7 @@ export default {
         return ''
       }
     },
-    // 重置模态框
-    dialogCloseHandler() {
-      this.$refs.ruleForm.resetFields()
-    },
+
     // 模态框表单提交
     submitHandle() {
       this.$refs.ruleForm.validate((valid) => {
@@ -310,11 +285,10 @@ export default {
       this.ids = val.map(item => item.id)
     },
     // 详情页面
-    detailsHandler(order) {
-      // this.$router.push('/orderDetails')
+    detailsHandler(id) {
       this.$router.push({
         path: '/order/details',
-        query: { id: order.id }
+        query: { id }
       })
     },
     // 打开派单模态框

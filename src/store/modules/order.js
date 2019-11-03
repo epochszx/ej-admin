@@ -3,7 +3,7 @@ import { post, post_array } from '@/utils/request'
 export default {
   namespaced: true,
   state: {
-    orders: [],
+    orderlist: [],
     order_unpay: [],
     order_unsend: [],
     order_unReceive: [],
@@ -13,7 +13,8 @@ export default {
     visible: false,
     title: '添加订单信息',
     loading: false,
-    waiters: []
+    waiters: [],
+    orderDetails: []
 
   },
   getters: {
@@ -26,8 +27,8 @@ export default {
     closeModal(state) {
       state.visible = false
     },
-    refreshOrders(state, orders) {
-      state.orders = orders
+    refreshOrders(state, orderlist) {
+      state.orderlist = orderlist
     },
     unPayOrder(state, order_unpay) {
       const a = order_unpay.filter((item) => {
@@ -79,6 +80,10 @@ export default {
     },
     findWaiter(state, waiters) {
       state.waiters = waiters
+    },
+    // 订单id详情
+    orderDetails(state, orderDetails) {
+      state.orderDetails = orderDetails
     }
   },
   actions: {
@@ -163,6 +168,13 @@ export default {
       const response = await request.get('/order/rejectOrder?orderId=' + params)
       context.dispatch('unConfirmOrders')
       context.dispatch('unSendOrders')
+      return response
+    },
+
+    // 根据订单id拿到产品id
+    async toProductId(context, id) {
+      const response = await request.get('/order/getOrderLinesByOrderId?orderId=' + id)
+      context.commit('orderDetails', response.data)
       return response
     }
   }

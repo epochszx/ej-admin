@@ -125,7 +125,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/pages/product/List'),
         name: 'product',
-        meta: { title: '产品管理', icon: 'tab' }
+        meta: { title: '产品管理', icon: 'component' }
       },
       {
         path: 'details',
@@ -144,7 +144,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/pages/waiter/List'),
         name: 'waiter',
-        meta: { title: '员工管理', icon: 'tab' }
+        meta: { title: '员工管理', icon: 'peoples' }
       },
       {
         path: 'details',
@@ -170,7 +170,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/pages/category/List'),
         name: 'category',
-        meta: { title: '栏目管理', icon: 'tab' }
+        meta: { title: '栏目管理', icon: 'list' }
       },
       {
         path: 'details',
@@ -203,7 +203,7 @@ export const asyncRoutes = [
   {
     path: '/check',
     component: Layout,
-    meta: { title: '审核管理', icon: 'tab' },
+    meta: { title: '审核管理', icon: 'eye' },
     children: [
       {
         path: 'waiter',

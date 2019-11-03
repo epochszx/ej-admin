@@ -19,7 +19,6 @@
         <el-button type="danger" @click="deletemoreHandler">批量删除</el-button>
       </el-col>
     </el-row>
-    {{ ids }}
     <el-table
       v-loading="loading"
       :data="products.list"
@@ -57,7 +56,6 @@
 
     <!-- model -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :before-close="hidemodel" @close="closeHandler">
-      {{ product }}
       <el-form ref="productsref" :model="product" :rules="rules">
         <el-form-item label="产品名称" prop="name" :label-width="formLabelWidth">
           <el-input v-model="product.name" />

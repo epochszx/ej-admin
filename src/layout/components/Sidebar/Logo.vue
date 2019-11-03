@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '家政服务平台',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      logo: 'http://39.105.45.119/logoimg.png'
     }
   }
 }
@@ -55,10 +55,10 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 50px;
+      height: 50px;
       vertical-align: middle;
-      margin-right: 12px;
+      // margin-right: 6px;
     }
 
     & .sidebar-title {
