@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '家政服务平台',
-      logo: 'http://39.105.45.119/logoimg.png'
+      logo: 'http://39.105.45.119/images/logoimg.png'
     }
   }
 }

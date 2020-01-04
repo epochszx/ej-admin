@@ -73,7 +73,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '主页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -114,6 +114,25 @@ export const asyncRoutes = [
         component: () => import('@/pages/customer/Details'),
         name: 'details',
         meta: { title: '顾客详情', icon: 'tab' }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/pages/order/List'),
+        name: 'order',
+        meta: { title: '订单管理', icon: 'tab' }
+      },
+      {
+        path: 'details',
+        hidden: true,
+        component: () => import('@/pages/order/Details'),
+        name: 'details',
+        meta: { title: '产品详情', icon: 'tab' }
       }
     ]
   },
@@ -178,25 +197,6 @@ export const asyncRoutes = [
         component: () => import('@/pages/category/Details'),
         name: 'details',
         meta: { title: '栏目详情', icon: 'tab' }
-      }
-    ]
-  },
-  {
-    path: '/order',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/pages/order/List'),
-        name: 'order',
-        meta: { title: '订单管理', icon: 'tab' }
-      },
-      {
-        path: 'details',
-        hidden: true,
-        component: () => import('@/pages/order/Details'),
-        name: 'details',
-        meta: { title: '产品详情', icon: 'tab' }
       }
     ]
   },
